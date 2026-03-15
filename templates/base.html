@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Rapid-I Precision Measuring Systems{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="viewport">
+        {% block login_overlay %}{% endblock %}
+        <div id="mainApp" class="base-main-app" {% block main_app_style %}{% endblock %}>
+        <div id="appCanvas" class="app-canvas base-layout">
+            <!-- Header -->
+            <div class="header">
+                <svg viewBox="0 0 1440 108.775" fill="none" preserveAspectRatio="none">
+                    <path d="M1440 0H0V108.775H1440V0Z" fill="#006DB8" />
+                </svg>
+            </div>
+
+            <!-- Logo -->
+            <div class="logo-bg">
+                <svg viewBox="0 0 280 88" fill="none">
+                    <path d="M0 10C0 4.47715 4.47715 0 10 0H270C275.523 0 280 4.47715 280 10V78C280 83.5228 275.523 88 270 88H10C4.47715 88 0 83.5229 0 78V10Z" fill="white" />
+                </svg>
+            </div>
+            <div class="logo-container">
+                <a href="{{ url_for('call_entry.index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Rapid-I Logo" />
+                </a>
+            </div>
+
+            <!-- Page Title -->
+            <div class="page-title">{% block page_title %}Call Entry - Ticket{% endblock %}</div>
+
+            <!-- User Profile -->
+            <div class="user-profile" onclick="toggleProfile()">
+                <img src="{{ url_for('static', filename='images/profile-icon.png') }}" alt="Profile" class="profile-img" />
+                <div class="profile-name">SD</div>
+                <div class="profile-arrow">
+                    <svg width="13" height="8" viewBox="0 0 9.39774 6.32487" fill="none">
+                        <path d="M8.39772 1.00002L4.69887 5.32487L1.00002 1.00002" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Profile Dropdown -->
+            <div id="profileDropdown" class="profile-dropdown">
+                <div class="dropdown-header">User Profile</div>
+                <div class="dropdown-item"><strong>Name:</strong> Sanjay Desai</div>
+                <div class="dropdown-item"><strong>Tag:</strong> SD</div>
+                <div class="dropdown-item"><strong>Role:</strong> Admin</div>
+                <div class="dropdown-item"><strong>Email:</strong> sanjay@rapid-i.com</div>
+                <div class="dropdown-item"><strong>Phone:</strong> +91 98765 43210</div>
+                <button class="btn-logout" onclick="handleLogout()">Logout</button>
+            </div>
+
+            <!-- Sidebar -->
+            <img src="{{ url_for('static', filename='images/sidebar.png') }}" alt="" class="sidebar" />
+
+            <!-- Sidebar Navigation Items -->
+            <a href="{{ url_for('login') }}" class="sidebar-item sidebar-link {% block nav_call_entry_active %}{% endblock %}" style="top: 100px;">
+                <div class="sidebar-btn"></div>
+                <img src="{{ url_for('static', filename='images/icon-contact.png') }}" alt="" class="sidebar-icon" />
+                <div class="sidebar-label">Login Screen</div>
+            </a>
+
+            <a href="{{ url_for('call_entry.index') }}" class="sidebar-item sidebar-link {% block nav_wf_tele_active %}{% endblock %}" style="top: 180px;">
+                <div class="sidebar-btn"></div>
+                <img src="{{ url_for('static', filename='images/icon-flag.png') }}" alt="" class="sidebar-icon" />
+                <div class="sidebar-overlay">
+                    <img src="{{ url_for('static', filename='images/icon-phone.png') }}" alt="" />
+                </div>
+                <div class="sidebar-label">WF Tele</div>
+            </a>
+
+            <a href="{{ url_for('workfront.workfront') }}" class="sidebar-item sidebar-link {% block nav_wf_field_active %}{% endblock %}" style="top: 260px;">
+                <div class="sidebar-btn"></div>
+                <img src="{{ url_for('static', filename='images/icon-direction.png') }}" alt="" class="sidebar-icon" />
+                <div class="sidebar-overlay">
+                    <img src="{{ url_for('static', filename='images/icon-map.png') }}" alt="" />
+                </div>
+                <div class="sidebar-label">WF Field</div>
+            </a>
+
+            <a href="{{ url_for('tripsheet.tripsheet') }}" class="sidebar-item sidebar-link {% block nav_tripsheet_active %}{% endblock %}" style="top: 340px;">
+                <div class="sidebar-btn"></div>
+                <img src="{{ url_for('static', filename='images/icon-announcement.png') }}" alt="" class="sidebar-icon" />
+                <div class="sidebar-label">Trip Sheet</div>
+            </a>
+
+            <a href="{{ url_for('workdone.workdone') }}" class="sidebar-item sidebar-link work-done-item {% block nav_workdone_active %}{% endblock %}" style="top: 420px;">
+                <div class="sidebar-btn"></div>
+                <img src="{{ url_for('static', filename='images/icon-flag.png') }}" alt="" class="sidebar-icon work-done-icon" />
+                <div class="sidebar-overlay">
+                    <img src="{{ url_for('static', filename='images/icon-flag.png') }}" alt="" class="work-done-icon" />
+                </div>
+                <div class="sidebar-label">Work Done</div>
+            </a>
+
+            <!-- Main Content Block -->
+            {% block content %}{% endblock %}
+        </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
