@@ -1,118 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Rapid-I Precision Measuring Systems</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body>
-    <div class="viewport">
-        <div id="loginPage" class="login-page login-page-v2">
-            <div class="login-card-v2">
-                <!-- Top blue header with logo -->
-                <div class="login-card-header-v2">
-                    <div class="login-card-logo-v2">
-                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Rapid-I Logo" />
-                    </div>
+{% extends "base.html" %}
+
+{% block title %}Login - Rapid-I Precision Measuring Systems{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block main_app_style %}style="display: none;"{% endblock %}
+
+{% block login_overlay %}
+<div class="login-overlay">
+    <div id="loginPage" class="login-page login-page-v2">
+        <div class="login-card-v2">
+            <!-- Top blue header with logo -->
+            <div class="login-card-header-v2">
+                <div class="login-card-logo-v2">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Rapid-I Logo" />
+                </div>
+            </div>
+
+            <!-- White content panel -->
+            <div class="login-card-body-v2">
+                <div class="login-welcome-v2">
+                    <h1>Welcome Back!</h1>
+                    <p>Sign in to continue</p>
                 </div>
 
-                <!-- White content panel -->
-                <div class="login-card-body-v2">
-                    <div class="login-welcome-v2">
-                        <h1>Welcome Back!</h1>
-                        <p>Sign in to continue</p>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    <div class="login-flash">
+                      {% for category, message in messages %}
+                        <div class="login-flash-item {{ category }}">{{ message }}</div>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endwith %}
+
+                <!-- Form -->
+                <form id="loginForm" class="login-form-v2" method="post" action="{{ url_for('login_post') }}">
+                    <div class="form-group-v2">
+                        <label>Email</label>
+                        <input type="email" name="email" placeholder="Enter your email" required />
                     </div>
 
-                    <!-- Toggle buttons -->
-                    <div class="login-toggle-row-v2">
-                        <button type="button" class="login-toggle-btn-v2 active" id="userLoginTab">User Login</button>
-                        <button type="button" class="login-toggle-btn-v2" id="adminLoginTab">Admin</button>
+                    <div class="form-group-v2">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="Enter your password" required />
                     </div>
 
-                    <!-- Form -->
-                    <form id="loginForm" class="login-form-v2">
-                        <div class="form-group-v2">
-                            <label>Username</label>
-                            <input type="text" id="loginUsername" placeholder="Email ID or Phone Number" required />
-                        </div>
-
-                        <div class="form-group-v2">
-                            <label>Password</label>
-                            <input type="password" id="loginPassword" placeholder="Enter your password" required />
-                        </div>
-
-                        <div class="login-forgot-row-v2">
-                            <button type="button" class="forgot-link-v2">Forgot Password?</button>
-                        </div>
-
-                        <div class="login-buttons-row-v2">
-                            <button type="submit" class="btn-login-v2">Login</button>
-                            <button type="button" class="btn-cancel-v2">Cancel</button>
-                        </div>
-                    </form>
-
-                    <div class="login-footer-v2">
-                        Rapid-I Precision Measuring Systems © 2026
+                    <div class="login-buttons-row-v2">
+                        <button type="submit" class="btn-login-v2">Login</button>
+                        <a class="btn-cancel-v2" href="{{ url_for('call_entry.index') }}">Cancel</a>
                     </div>
+                </form>
+
+                <div class="login-footer-v2">
+                    Rapid-I Precision Measuring Systems (c) 2026
                 </div>
             </div>
         </div>
     </div>
-
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-    <script>
-        // Login form handler for separate login page
-        document.getElementById('loginForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Save login state to localStorage
-            localStorage.setItem('isLoggedIn', 'true');
-
-            const isAdminSelected = document.getElementById('adminLoginTab')?.classList.contains('active');
-            const username = (document.getElementById('loginUsername')?.value || '').trim();
-
-            // Store basic profile info (demo values)
-            // If you later add real auth, just replace these localStorage values.
-            localStorage.setItem('userName', username && !username.includes('@') ? username : 'John Doe');
-            localStorage.setItem('userEmail', username.includes('@') ? username : 'john.doe@rapid-i.com');
-            localStorage.setItem('userPhone', '+91 9876543210');
-            localStorage.setItem('userTag', 'JD');
-
-            if (isAdminSelected) {
-                localStorage.setItem('userRole', 'admin');
-                localStorage.setItem('userRoleLabel', 'Administrator');
-                window.location.href = "{{ url_for('admin_panel') }}";
-                return;
-            }
-
-            localStorage.setItem('userRole', 'user');
-            localStorage.setItem('userRoleLabel', 'Technician');
-            window.location.href = "{{ url_for('user_profile') }}";
-            return;
-        });
-
-        // Cancel button
-        document.querySelector('.btn-cancel-v2')?.addEventListener('click', function() {
-            window.location.href = "{{ url_for('call_entry.index') }}";
-        });
-
-        // Toggle buttons (visual only for now)
-        const userTab = document.getElementById('userLoginTab');
-        const adminTab = document.getElementById('adminLoginTab');
-        function setActive(tab) {
-            userTab?.classList.remove('active');
-            adminTab?.classList.remove('active');
-            tab.classList.add('active');
-        }
-        userTab?.addEventListener('click', () => setActive(userTab));
-        adminTab?.addEventListener('click', () => setActive(adminTab));
-
-        // If already logged in, go to role landing page
-        if (localStorage.getItem('isLoggedIn') === 'true') {
-            const role = localStorage.getItem('userRole');
-            window.location.href = role === 'admin' ? "{{ url_for('admin_panel') }}" : "{{ url_for('user_profile') }}";
-        }
-    </script>
-</body>
-</html>
+</div>
+{% endblock %}

@@ -98,6 +98,7 @@
   font-weight: 700;
   display: inline-flex;
   align-items: center;
+  text-decoration: none;
   box-shadow:
     0 4px 0 #007341,
     0 7px 12px rgba(0, 0, 0, 0.35);
@@ -116,6 +117,33 @@
   font-size: 20px;
   font-weight: 700;
   margin-right: 10px;
+}
+
+.admin-flash {
+  margin: 6px 0 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.admin-flash-item {
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #e9f4ff;
+  color: #0a4a7a;
+  border: 1px solid #b6d7f2;
+}
+
+.admin-flash-item.error {
+  background: #ffe9ea;
+  color: #8a1f24;
+  border-color: #f4b5b8;
+}
+
+.admin-flash-item.success {
+  background: #e7f8ee;
+  color: #1d6b3a;
+  border-color: #a9e4bf;
 }
 
 .admin-create-btn:hover {
@@ -175,6 +203,7 @@
   font-size: 12px;
   font-weight: 700;
   color: #ffffff;
+  background: #64748b;
 }
 
 .admin-role-pill.user {
@@ -190,9 +219,19 @@
   font-size: 18px;
 }
 
+.admin-password-plain {
+  font-size: 12px;
+  word-break: break-all;
+}
+
 .admin-action-cell {
   display: flex;
   gap: 10px;
+  align-items: center;
+}
+
+.admin-delete-form {
+  margin: 0;
 }
 
 .admin-btn-edit,
@@ -208,6 +247,7 @@
   align-items: center;
   justify-content: center;
   color: #ffffff;
+  text-decoration: none;
 }
 
 .admin-btn-edit {

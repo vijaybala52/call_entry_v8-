@@ -74,38 +74,6 @@ window.addEventListener('load', calculateScale);
 window.addEventListener('resize', calculateScale);
 
 // ============================================
-// Login Functionality
-// ============================================
-// Check if user is logged in on page load (for call entry page)
-function checkLoginState() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    
-    // If not logged in, redirect to login page
-    if (!isLoggedIn) {
-        window.location.href = '/login';
-        return;
-    }
-    
-    // If logged in, show main app
-    const mainApp = document.getElementById('mainApp');
-    if (mainApp) {
-        mainApp.style.display = 'block';
-        if (typeof calculateScale === 'function') {
-    calculateScale();
-        }
-    }
-}
-
-// Check login state when page loads (only for call entry page)
-if (document.getElementById('mainApp')) {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', checkLoginState);
-    } else {
-        checkLoginState();
-    }
-}
-
-// ============================================
 // Profile Dropdown
 // ============================================
 function toggleProfile() {
@@ -127,35 +95,10 @@ document.addEventListener('click', function(e) {
 // Logout
 // ============================================
 function handleLogout() {
-    // Clear login state from localStorage
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userRoleLabel');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('userPhone');
-    localStorage.removeItem('userTag');
-    
-    // Redirect to login page
-    window.location.href = '/login';
+    // Redirect to server-side logout
+    window.location.href = '/logout';
     document.getElementById('profileDropdown')?.classList.remove('show');
 }
-
-// ============================================
-// Dynamic "Login Screen" Sidebar Link (Admin Panel vs User Profile)
-// ============================================
-document.addEventListener('DOMContentLoaded', () => {
-    const link = document.getElementById('loginNavLink');
-    if (!link) return;
-
-    const role = localStorage.getItem('userRole'); // 'admin' or 'user'
-    if (role === 'user') {
-        link.href = '/user-profile';
-    } else {
-        // default to admin panel
-        link.href = '/admin-panel';
-    }
-});
 
 // ============================================
 // Register Modal

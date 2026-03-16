@@ -34,10 +34,11 @@
             <!-- Page Title -->
             <div class="page-title">{% block page_title %}Call Entry - Ticket{% endblock %}</div>
 
+            {% if current_user.is_authenticated %}
             <!-- User Profile -->
             <div class="user-profile" onclick="toggleProfile()">
                 <img src="{{ url_for('static', filename='images/profile-icon.png') }}" alt="Profile" class="profile-img" />
-                <div class="profile-name">SD</div>
+                <div class="profile-name">{{ current_user.tag_name or 'NA' }}</div>
                 <div class="profile-arrow">
                     <svg width="13" height="8" viewBox="0 0 9.39774 6.32487" fill="none">
                         <path d="M8.39772 1.00002L4.69887 5.32487L1.00002 1.00002" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -48,20 +49,28 @@
             <!-- Profile Dropdown -->
             <div id="profileDropdown" class="profile-dropdown">
                 <div class="dropdown-header">User Profile</div>
-                <div class="dropdown-item"><strong>Name:</strong> Sanjay Desai</div>
-                <div class="dropdown-item"><strong>Tag:</strong> SD</div>
-                <div class="dropdown-item"><strong>Role:</strong> Admin</div>
-                <div class="dropdown-item"><strong>Email:</strong> sanjay@rapid-i.com</div>
-                <div class="dropdown-item"><strong>Phone:</strong> +91 98765 43210</div>
+                <div class="dropdown-item"><strong>Name:</strong> {{ current_user.username or '-' }}</div>
+                <div class="dropdown-item"><strong>Tag:</strong> {{ current_user.tag_name or '-' }}</div>
+                <div class="dropdown-item"><strong>Role:</strong> {{ current_user.role_name or '-' }}</div>
+                <div class="dropdown-item"><strong>Email:</strong> {{ current_user.email_id or '-' }}</div>
+                <div class="dropdown-item"><strong>Phone:</strong> {{ current_user.phone_no or '-' }}</div>
                 <button class="btn-logout" onclick="handleLogout()">Logout</button>
             </div>
+            {% endif %}
 
             <!-- Sidebar -->
             <img src="{{ url_for('static', filename='images/sidebar.png') }}" alt="" class="sidebar" />
 
             <!-- Sidebar Navigation Items -->
-            <!-- Login icon (dynamic): Admin -> Admin Panel, User -> User Profile -->
-            <a id="loginNavLink" href="{{ url_for('admin_panel') }}" class="sidebar-item sidebar-link {% block nav_login_dynamic_active %}{% endblock %}" style="top: 100px;">
+            <!-- Login icon (dynamic): Admin -> Admin Panel, User -> User Profile, Guest -> Login -->
+            {% if current_user.is_authenticated and current_user.is_admin %}
+                {% set login_href = url_for('admin_panel') %}
+            {% elif current_user.is_authenticated %}
+                {% set login_href = url_for('user_profile') %}
+            {% else %}
+                {% set login_href = url_for('login') %}
+            {% endif %}
+            <a id="loginNavLink" href="{{ login_href }}" class="sidebar-item sidebar-link {% block nav_login_dynamic_active %}{% endblock %}" style="top: 100px;">
                 <div class="sidebar-btn"></div>
                 <img src="{{ url_for('static', filename='images/icon-contact.png') }}" alt="" class="sidebar-icon" />
                 <div class="sidebar-label">Login Screen</div>
