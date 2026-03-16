@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Rapid-I - Admin Panel{% endblock %}
+{% block page_title %}Admin Panel{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-panel.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-panel">
+    <div class="admin-card-row">
+        <div class="admin-card admin-card-total">
+            <div class="admin-card-icon">
+                <span class="admin-card-icon-user"></span>
+            </div>
+            <div class="admin-card-info">
+                <div class="admin-card-number">4</div>
+                <div class="admin-card-label">Total Users</div>
+            </div>
+        </div>
+
+        <div class="admin-card admin-card-admins">
+            <div class="admin-card-icon">
+                <span class="admin-card-icon-shield"></span>
+            </div>
+            <div class="admin-card-info">
+                <div class="admin-card-number">1</div>
+                <div class="admin-card-label">Admins</div>
+            </div>
+        </div>
+
+        <div class="admin-card admin-card-regular">
+            <div class="admin-card-icon">
+                <span class="admin-card-icon-gear"></span>
+            </div>
+            <div class="admin-card-info">
+                <div class="admin-card-number">3</div>
+                <div class="admin-card-label">Regular Users</div>
+            </div>
+        </div>
+
+        <div class="admin-card admin-card-active">
+            <div class="admin-card-icon">
+                <span class="admin-card-icon-activity"></span>
+            </div>
+            <div class="admin-card-info">
+                <div class="admin-card-number">4</div>
+                <div class="admin-card-label">Active Today</div>
+            </div>
+        </div>
+    </div>
+
+    <button class="admin-create-btn" id="adminCreateUserBtn">
+        <span class="admin-create-icon">+</span>
+        <span class="admin-create-text">Create New User</span>
+    </button>
+
+    <div class="admin-table-wrapper">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th style="width: 260px;">Name</th>
+                    <th style="width: 120px;">Role</th>
+                    <th style="width: 340px;">Email</th>
+                    <th style="width: 170px;">Phone Number</th>
+                    <th style="width: 150px;">Password</th>
+                    <th style="width: 150px;">Created Date</th>
+                    <th style="width: 170px;">Action</th>
+                </tr>
+            </thead>
+            <tbody id="adminUsersTableBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Register Modal (Create New User) -->
+<div id="adminRegisterOverlay" class="admin-register-overlay" aria-hidden="true">
+    <div class="admin-register-modal" role="dialog" aria-modal="true" aria-labelledby="adminRegisterTitle">
+        <div class="admin-register-header">
+            <div id="adminRegisterTitle" class="admin-register-title">Register New Account</div>
+            <button type="button" class="admin-register-close" id="adminRegisterCloseBtn" aria-label="Close">×</button>
+        </div>
+
+        <div class="admin-register-body">
+            <form id="adminRegisterForm" class="admin-register-form">
+                <div class="admin-register-grid">
+                    <div class="admin-field">
+                        <label>Full Name *</label>
+                        <input type="text" name="full_name" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="admin-field">
+                        <label>Phone Number *</label>
+                        <input type="tel" name="phone" placeholder="Enter your phone number" required>
+                    </div>
+
+                    <div class="admin-field">
+                        <label>Tag Name *</label>
+                        <input type="text" name="tag" placeholder="Enter tag name (e.g., SD, PB)" required>
+                    </div>
+
+                    <div class="admin-field">
+                        <label>Create Password *</label>
+                        <input type="password" name="password" placeholder="Create a strong password" minlength="8" required>
+                        <div class="admin-help">Must be at least 8 characters</div>
+                    </div>
+
+                    <div class="admin-field">
+                        <label>Role *</label>
+                        <select name="role" required>
+                            <option value="" selected>Select Role</option>
+                            <option value="Admin">Admin</option>
+                            <option value="User">User</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Technician">Technician</option>
+                        </select>
+                    </div>
+
+                    <div class="admin-field">
+                        <label>Confirm Password *</label>
+                        <input type="password" name="confirm_password" placeholder="Re-enter your password" minlength="8" required>
+                    </div>
+
+                    <div class="admin-field admin-field-wide">
+                        <label>Email ID *</label>
+                        <input type="email" name="email" placeholder="Enter your email address" required>
+                    </div>
+
+                    <div class="admin-terms admin-field-wide">
+                        <label class="admin-terms-label">
+                            <input type="checkbox" name="terms" required>
+                            <span>I agree to the <span class="admin-link">Terms and Conditions</span> and <span class="admin-link">Privacy Policy</span></span>
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="admin-register-footer">
+            <button type="submit" form="adminRegisterForm" class="admin-btn-3d admin-btn-green">Register</button>
+            <button type="button" class="admin-btn-3d admin-btn-red" id="adminRegisterCancelBtn">Cancel</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='js/admin-panel.js') }}"></script>
+{% endblock %}
+

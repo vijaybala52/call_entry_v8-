@@ -1,5 +1,5 @@
 """Main Flask application file."""
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for, redirect
 from config import DB_CONFIG
 from call_entry import call_entry_bp
 from workfront import workfront_bp
@@ -21,6 +21,12 @@ app.register_blueprint(workdone_bp)
 @app.route("/login")
 def login():
     return render_template("login.html")
+
+
+@app.route("/admin-panel")
+def admin_panel():
+    # Basic route to render the static Admin Panel UI
+    return render_template("admin_panel.html")
 
 
 if __name__ == "__main__":

@@ -60,10 +60,11 @@
             <img src="{{ url_for('static', filename='images/sidebar.png') }}" alt="" class="sidebar" />
 
             <!-- Sidebar Navigation Items -->
-            <a href="{{ url_for('login') }}" class="sidebar-item sidebar-link {% block nav_call_entry_active %}{% endblock %}" style="top: 100px;">
+            <!-- Existing login icon button now opens Admin Panel -->
+            <a href="{{ url_for('admin_panel') }}" class="sidebar-item sidebar-link {% block nav_admin_active %}{% endblock %}" style="top: 100px;">
                 <div class="sidebar-btn"></div>
                 <img src="{{ url_for('static', filename='images/icon-contact.png') }}" alt="" class="sidebar-icon" />
-                <div class="sidebar-label">Login Screen</div>
+                <div class="sidebar-label">Admin Panel</div>
             </a>
 
             <a href="{{ url_for('call_entry.index') }}" class="sidebar-item sidebar-link {% block nav_wf_tele_active %}{% endblock %}" style="top: 180px;">
