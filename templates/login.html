@@ -8,50 +8,53 @@
 </head>
 <body>
     <div class="viewport">
-        <div id="loginPage" class="login-page">
-            <div class="login-bg-blur">
-                <div class="blur-circle-1"></div>
-                <div class="blur-circle-2"></div>
-            </div>
-            
-            <div class="login-card">
-                <div class="login-header">
-                    <div class="login-logo-box">
-                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Rapid-I Logo" class="login-logo" />
+        <div id="loginPage" class="login-page login-page-v2">
+            <div class="login-card-v2">
+                <!-- Top blue header with logo -->
+                <div class="login-card-header-v2">
+                    <div class="login-card-logo-v2">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Rapid-I Logo" />
                     </div>
                 </div>
-                
-                <div class="login-welcome">
-                    <h1>Welcome Back!</h1>
-                    <p>Sign in to continue to your account</p>
-                </div>
-                
-                <div class="login-form-container">
-                    <form id="loginForm">
-                        <div class="form-group">
+
+                <!-- White content panel -->
+                <div class="login-card-body-v2">
+                    <div class="login-welcome-v2">
+                        <h1>Welcome Back!</h1>
+                        <p>Sign in to continue</p>
+                    </div>
+
+                    <!-- Toggle buttons -->
+                    <div class="login-toggle-row-v2">
+                        <button type="button" class="login-toggle-btn-v2 active" id="userLoginTab">User Login</button>
+                        <button type="button" class="login-toggle-btn-v2" id="adminLoginTab">Admin</button>
+                    </div>
+
+                    <!-- Form -->
+                    <form id="loginForm" class="login-form-v2">
+                        <div class="form-group-v2">
                             <label>Username</label>
-                            <input type="text" placeholder="Email ID or Phone Number" required />
+                            <input type="text" id="loginUsername" placeholder="Email ID or Phone Number" required />
                         </div>
-                        <div class="form-group">
+
+                        <div class="form-group-v2">
                             <label>Password</label>
-                            <input type="password" placeholder="Enter your password" required />
+                            <input type="password" id="loginPassword" placeholder="Enter your password" required />
                         </div>
-                        <div class="forgot-password">
-                            <button type="button">Forgot Password?</button>
+
+                        <div class="login-forgot-row-v2">
+                            <button type="button" class="forgot-link-v2">Forgot Password?</button>
                         </div>
-                        <div class="login-buttons">
-                            <button type="submit" class="btn-login">Login</button>
-                            <button type="button" class="btn-cancel">Cancel</button>
-                        </div>
-                        <div class="register-link">
-                            <p>Don't have an account?</p>
-                            <button type="button" id="showRegister">Register Here</button>
+
+                        <div class="login-buttons-row-v2">
+                            <button type="submit" class="btn-login-v2">Login</button>
+                            <button type="button" class="btn-cancel-v2">Cancel</button>
                         </div>
                     </form>
-                </div>
-                
-                <div class="login-footer">
-                    Rapid-I Precision Measuring Systems © 2026
+
+                    <div class="login-footer-v2">
+                        Rapid-I Precision Measuring Systems © 2026
+                    </div>
                 </div>
             </div>
         </div>
@@ -65,19 +68,50 @@
             
             // Save login state to localStorage
             localStorage.setItem('isLoggedIn', 'true');
-            
-            // Redirect to call entry page
-            window.location.href = "{{ url_for('call_entry.index') }}";
+
+            const isAdminSelected = document.getElementById('adminLoginTab')?.classList.contains('active');
+            const username = (document.getElementById('loginUsername')?.value || '').trim();
+
+            // Store basic profile info (demo values)
+            // If you later add real auth, just replace these localStorage values.
+            localStorage.setItem('userName', username && !username.includes('@') ? username : 'John Doe');
+            localStorage.setItem('userEmail', username.includes('@') ? username : 'john.doe@rapid-i.com');
+            localStorage.setItem('userPhone', '+91 9876543210');
+            localStorage.setItem('userTag', 'JD');
+
+            if (isAdminSelected) {
+                localStorage.setItem('userRole', 'admin');
+                localStorage.setItem('userRoleLabel', 'Administrator');
+                window.location.href = "{{ url_for('admin_panel') }}";
+                return;
+            }
+
+            localStorage.setItem('userRole', 'user');
+            localStorage.setItem('userRoleLabel', 'Technician');
+            window.location.href = "{{ url_for('user_profile') }}";
+            return;
         });
 
         // Cancel button
-        document.querySelector('.btn-cancel')?.addEventListener('click', function() {
+        document.querySelector('.btn-cancel-v2')?.addEventListener('click', function() {
             window.location.href = "{{ url_for('call_entry.index') }}";
         });
 
-        // Check if already logged in, redirect to call entry
+        // Toggle buttons (visual only for now)
+        const userTab = document.getElementById('userLoginTab');
+        const adminTab = document.getElementById('adminLoginTab');
+        function setActive(tab) {
+            userTab?.classList.remove('active');
+            adminTab?.classList.remove('active');
+            tab.classList.add('active');
+        }
+        userTab?.addEventListener('click', () => setActive(userTab));
+        adminTab?.addEventListener('click', () => setActive(adminTab));
+
+        // If already logged in, go to role landing page
         if (localStorage.getItem('isLoggedIn') === 'true') {
-            window.location.href = "{{ url_for('call_entry.index') }}";
+            const role = localStorage.getItem('userRole');
+            window.location.href = role === 'admin' ? "{{ url_for('admin_panel') }}" : "{{ url_for('user_profile') }}";
         }
     </script>
 </body>

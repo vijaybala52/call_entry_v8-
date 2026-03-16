@@ -129,11 +129,33 @@ document.addEventListener('click', function(e) {
 function handleLogout() {
     // Clear login state from localStorage
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userRoleLabel');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userPhone');
+    localStorage.removeItem('userTag');
     
     // Redirect to login page
     window.location.href = '/login';
     document.getElementById('profileDropdown')?.classList.remove('show');
 }
+
+// ============================================
+// Dynamic "Login Screen" Sidebar Link (Admin Panel vs User Profile)
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+    const link = document.getElementById('loginNavLink');
+    if (!link) return;
+
+    const role = localStorage.getItem('userRole'); // 'admin' or 'user'
+    if (role === 'user') {
+        link.href = '/user-profile';
+    } else {
+        // default to admin panel
+        link.href = '/admin-panel';
+    }
+});
 
 // ============================================
 // Register Modal

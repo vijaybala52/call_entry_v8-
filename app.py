@@ -29,6 +29,11 @@ def admin_panel():
     return render_template("admin_panel.html")
 
 
+@app.route("/user-profile")
+def user_profile():
+    return render_template("user_profile.html")
+
+
 if __name__ == "__main__":
     #app.run(host="0.0.0.0", port=5000)
     app.run(host="0.0.0.0", port=5000, debug=True)

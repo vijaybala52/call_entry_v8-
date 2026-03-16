@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Rapid-I - User Profile{% endblock %}
+{% block page_title %}User Profile{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user-profile.css') }}">
+{% endblock %}
+
+{% block nav_login_dynamic_active %}active{% endblock %}
+
+{% block content %}
+<!-- Background -->
+<div class="userprof-bg"></div>
+
+<div class="userprof-card">
+    <div class="userprof-card-header">
+        <div class="userprof-card-header-text">Currently Logged In User</div>
+    </div>
+
+    <div class="userprof-card-body">
+        <div class="userprof-avatar">
+            <div id="userProfAvatarText" class="userprof-avatar-text">JD</div>
+        </div>
+
+        <div class="userprof-grid">
+            <div class="userprof-field">
+                <div class="userprof-label">Full Name</div>
+                <div id="userProfName" class="userprof-input-like">John Doe</div>
+            </div>
+
+            <div class="userprof-field">
+                <div class="userprof-label">Role</div>
+                <div id="userProfRole" class="userprof-input-like">Technician</div>
+            </div>
+
+            <div class="userprof-field">
+                <div class="userprof-label">Email Address</div>
+                <div id="userProfEmail" class="userprof-input-like">john.doe@rapid-i.com</div>
+            </div>
+
+            <div class="userprof-field">
+                <div class="userprof-label">Phone Number</div>
+                <div id="userProfPhone" class="userprof-input-like">+91 9876543210</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button class="userprof-logout-btn" id="userProfLogoutBtn">Logout</button>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='js/user-profile.js') }}"></script>
+{% endblock %}
+
