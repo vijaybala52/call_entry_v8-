@@ -73,7 +73,15 @@
             <a id="loginNavLink" href="{{ login_href }}" class="sidebar-item sidebar-link {% block nav_login_dynamic_active %}{% endblock %}" style="top: 100px;">
                 <div class="sidebar-btn"></div>
                 <img src="{{ url_for('static', filename='images/icon-contact.png') }}" alt="" class="sidebar-icon" />
-                <div class="sidebar-label">Login Screen</div>
+                <div class="sidebar-label">
+                    {% if current_user.is_authenticated and current_user.is_admin %}
+                        Admin Panel
+                    {% elif current_user.is_authenticated %}
+                        User Profile
+                    {% else %}
+                        Login Screen
+                    {% endif %}
+                </div>
             </a>
 
             <a href="{{ url_for('call_entry.index') }}" class="sidebar-item sidebar-link {% block nav_wf_tele_active %}{% endblock %}" style="top: 180px;">

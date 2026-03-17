@@ -95,7 +95,7 @@
 
 .userprof-logout-btn {
   position: absolute;
-  left: 780px;
+  left: 50%;
   top: 880px;
   width: 380px;
   height: 56px;
@@ -106,17 +106,22 @@
   font-size: 22px;
   font-weight: 900;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transform: translateX(-50%);
   box-shadow: 0 6px 0 rgba(0, 0, 0, 0.28), 0 12px 20px rgba(0, 0, 0, 0.28);
   z-index: 10;
 }
 
 .userprof-logout-btn:hover {
-  transform: translateY(2px);
+  transform: translate(-50%, 2px);
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.28), 0 9px 16px rgba(0, 0, 0, 0.25);
 }
 
 .userprof-logout-btn:active {
-  transform: translateY(4px);
+  transform: translate(-50%, 4px);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.28);
 }
 

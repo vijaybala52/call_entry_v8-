@@ -28,6 +28,16 @@ login_manager.login_view = "login"
 login_manager.init_app(app)
 
 
+@app.before_request
+def require_login():
+    if request.endpoint in ("login", "login_post", "static"):
+        return None
+    if request.endpoint is None:
+        return None
+    if not current_user.is_authenticated:
+        return redirect(url_for("login"))
+
+
 class User(UserMixin):
     def __init__(self, id, username, tag_name, role_id, role_name, email_id, phone_no):
         self.id = str(id)
@@ -107,6 +117,19 @@ def get_user_by_email(email):
         WHERE u.email_id = %s
     """
     return _fetch_one(sql, (email,))
+
+
+def get_user_by_login_identifier(login_id):
+    sql = """
+        SELECT u.id, u.username, u.tag_name, u.role_id, u.email_id, u.phone_no, u.password,
+               r.role_name,u.create_date
+        FROM users u
+        LEFT JOIN roles r ON r.id = u.role_id
+        WHERE LOWER(u.email_id) = LOWER(%s)
+           OR LOWER(u.username) = LOWER(%s)
+           OR u.phone_no = %s
+    """
+    return _fetch_one(sql, (login_id, login_id, login_id))
 
 
 def get_all_users():
@@ -237,15 +260,15 @@ def login():
 
 @app.route("/login", methods=["POST"])
 def login_post():
-    email = (request.form.get("email") or "").strip().lower()
+    login_id = (request.form.get("login_id") or request.form.get("email") or "").strip()
     password = request.form.get("password") or ""
-    if not email or not password:
-        flash("Please enter both email and password.", "error")
+    if not login_id or not password:
+        flash("Please enter your email, username, or phone number and password.", "error")
         return redirect(url_for("login"))
 
-    row = get_user_by_email(email)
+    row = get_user_by_login_identifier(login_id)
     if not row:
-        flash("Invalid email or password.", "error")
+        flash("Invalid credentials.", "error")
         return redirect(url_for("login"))
 
     stored_password = row.get("password") or ""
@@ -261,7 +284,7 @@ def login_post():
         needs_rehash = True
 
     if not password_ok:
-        flash("Invalid email or password.", "error")
+        flash("Invalid credentials.", "error")
         return redirect(url_for("login"))
 
     if needs_rehash:

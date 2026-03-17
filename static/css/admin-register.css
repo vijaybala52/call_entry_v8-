@@ -2,8 +2,9 @@
 .admin-register-page {
     position: static;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
+    min-height: 100vh;
     padding: 40px 0 80px;
     background: transparent;
 }

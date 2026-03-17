@@ -74,6 +74,27 @@ window.addEventListener('load', calculateScale);
 window.addEventListener('resize', calculateScale);
 
 // ============================================
+// Password Toggle
+// ============================================
+function initPasswordToggles() {
+    document.querySelectorAll('.password-toggle').forEach((btn) => {
+        if (btn.dataset.bound === 'true') return;
+        btn.dataset.bound = 'true';
+        btn.addEventListener('click', () => {
+            const field = btn.closest('.password-field');
+            const input = field?.querySelector('input');
+            if (!input) return;
+            const isVisible = input.type === 'text';
+            input.type = isVisible ? 'password' : 'text';
+            btn.dataset.visible = isVisible ? 'false' : 'true';
+            btn.setAttribute('aria-label', isVisible ? 'Show password' : 'Hide password');
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initPasswordToggles);
+
+// ============================================
 // Profile Dropdown
 // ============================================
 function toggleProfile() {
