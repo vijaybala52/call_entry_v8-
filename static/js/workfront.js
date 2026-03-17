@@ -604,7 +604,7 @@ function renderTotalRow() {
         <div class="td" style="width: 75px;"></div>
         <div class="td" style="width: 45px;"></div>
         <div class="td" style="width: 80px;"></div>
-        <div class="td td-left" style="width: 250px;"></div>
+        <div class="td td-left" style="width: 270px;"></div>
         <div class="td" style="width: 26px;"></div>
         <div class="td" style="width: 15px;">${totals.s}</div>
         <div class="td" style="width: 15px;">${totals.a}</div>
@@ -614,7 +614,7 @@ function renderTotalRow() {
         <div class="td" style="width: 15px;">${totals.f}</div>
         <div class="td" style="width: 15px;">${totals.p}</div>
         <div class="td td-left" style="width: 85px;"></div>
-        <div class="td td-left" style="width: 270px;"></div>
+        <div class="td td-left" style="width: 295px;"></div>
         <div class="td" style="width: 45px;"></div>
         <div class="td td-left" style="width: 110px;"></div>
         <div class="td td-left" style="width: 110px;"></div>

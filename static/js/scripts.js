@@ -652,9 +652,6 @@ document.querySelector('.submit-button')?.addEventListener('click', function(e) 
 // ============================================
 // Console Info
 // ============================================
-console.log('%c🎯 Rapid-I Precision Measuring Systems', 'color: #006db8; font-size: 16px; font-weight: bold;');
-console.log('%c📐 Canvas: 1920 x 1080 pixels', 'color: #0088dd; font-size: 14px;');
-console.log('%c⚡ Dynamic scaling enabled', 'color: #00a8ff; font-size: 14px;');
 
 // ============================================
 // MySQL-backed Autocomplete + Autofill
@@ -1543,9 +1540,10 @@ function renderTicketTable(tickets = []) {
 
 // Get user tag from profile
 function getUserTag() {
-    const profileTag = document.querySelector('#profileDropdown .dropdown-item strong');
-    if (profileTag && profileTag.textContent === 'Tag:') {
-        const tagText = profileTag.parentElement.textContent.replace('Tag:', '').trim();
+    const dropdownItems = document.querySelectorAll('#profileDropdown .dropdown-item');
+    const tagItem = Array.from(dropdownItems).find(item => item.textContent.trim().startsWith('Tag:'));
+    if (tagItem) {
+        const tagText = tagItem.textContent.replace('Tag:', '').trim();
         return tagText || 'SD'; // Default to SD if not found
     }
     return 'SD'; // Default

@@ -1,5 +1,6 @@
 """Call Entry related routes."""
 from flask import Blueprint, render_template, jsonify, request
+from flask_login import current_user
 from mysql.connector import Error
 from datetime import date, datetime, time, timedelta
 import traceback
@@ -689,12 +690,18 @@ def save_ticket():
                 INSERT INTO ticket_issues (ticket_id, date, start_time, end_time, log_by, customer_name, fault, priority, status, contact_id)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
+            log_by_name = None
+            if current_user.is_authenticated:
+                log_by_name = current_user.tag_name
+            if not log_by_name:
+                log_by_name = data.get("log_by") or None
+
             ti_values = (
                 ticket_id,
                 date_value,
                 data.get("start_time") or None,
                 data.get("end_time") or None,
-                data.get("log_by") or None,
+                log_by_name,
                 customer_name_from_contact,  # Use customer_name from contacts table
                 data.get("fault") or None,
                 data.get("priority") or None,
@@ -732,7 +739,7 @@ def save_ticket():
         # Use contacts table to fetch customer_name based on ticket_issues.contact_id
         cur.execute("""
             SELECT t.id AS ticket_id, t.ticket_no, t.company_id, t.machine_id, t.contact_id,
-                   ti.id AS issue_id, ti.date, ti.start_time, ti.end_time, ti.log_by, 
+                   ti.id AS issue_id, ti.date, ti.start_time, ti.end_time, ti.log_by AS log_by, 
                    cont.name AS customer_name,
                    ti.fault, ti.priority, ti.status AS issue_status, t.status AS ticket_status
             FROM tickets t
