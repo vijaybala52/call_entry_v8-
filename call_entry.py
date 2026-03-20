@@ -28,10 +28,43 @@ def _serialize_row(row):
     return {k: _serialize_value(v) for k, v in row.items()}
 
 
+def _fetch_option_rows():
+    """Fetch security and status option rows for dropdowns."""
+    cnx = cur = None
+    security_options = []
+    status_options = []
+    try:
+        cnx = get_connection(DB_CONFIG)
+        cur = cnx.cursor(dictionary=True)
+
+        cur.execute("SELECT id, security_option FROM security_options ORDER BY security_option")
+        security_options = cur.fetchall() or []
+
+        cur.execute("SELECT id, status_option FROM status_options ORDER BY status_option")
+        status_options = cur.fetchall() or []
+    except Exception:
+        security_options = []
+        status_options = []
+    finally:
+        try:
+            if cur:
+                cur.close()
+            if cnx:
+                cnx.close()
+        except Exception:
+            pass
+    return security_options, status_options
+
+
 @call_entry_bp.route("/")
 @call_entry_bp.route("/call-entry")
 def index():
-    return render_template("call_entry.html")
+    security_options, status_options = _fetch_option_rows()
+    return render_template(
+        "call_entry.html",
+        security_options=security_options,
+        status_options=status_options,
+    )
 
 
 @call_entry_bp.route("/api/company-suggest")
@@ -84,15 +117,21 @@ def company_suggest():
 def company_details(company_id):
     """Get full company details plus related machines and contacts."""
     company_sql = """
-        SELECT id, name, address1, address2, address3, city, state, pin, route, zone, area, cluster, gstin,
-               weekly_off_start, weekly_off_end, working_hrs_start, working_hrs_end, security
-        FROM companies
-        WHERE id = %s
+        SELECT c.id, c.name, c.address1, c.address2, c.address3, c.city, c.state, c.pin, c.country,
+               c.route, c.zone, c.area, c.cluster, c.gstin,
+               c.weekly_off_start, c.weekly_off_end, c.working_hrs_start, c.working_hrs_end,
+               c.security AS security_id, so.security_option AS security
+        FROM companies c
+        LEFT JOIN security_options so ON so.id = c.security
+        WHERE c.id = %s
     """
     machines_sql = """
-        SELECT id, company_id, ticket_no, mc_no, model, status, start_dt, end_dt,
-               Inv_No AS inv_no, Inv_Dt AS inv_dt, Inv_Value AS inv_value
-        FROM machines
+        SELECT m.id, m.company_id, m.ticket_no, m.mc_no, m.model,
+               m.status AS status_id, st.status_option AS status,
+               m.start_dt, m.end_dt,
+               m.Inv_No AS inv_no, m.Inv_Dt AS inv_dt, m.Inv_Value AS inv_value
+        FROM machines m
+        LEFT JOIN status_options st ON st.id = m.status
         WHERE company_id = %s
         ORDER BY id DESC 
         LIMIT 20
@@ -187,14 +226,18 @@ def machine_suggest():
 def machine_details(machine_id):
     """Return a machine, its company, contacts, latest ticket, and ticket list."""
     machine_sql = """
-        SELECT m.id, m.company_id, m.ticket_no, m.mc_no, m.model, m.status,
+        SELECT m.id, m.company_id, m.ticket_no, m.mc_no, m.model,
+               m.status AS status_id, st.status_option AS status,
                m.start_dt, m.end_dt, m.Inv_No AS inv_no,
                m.Inv_Dt AS inv_dt, m.Inv_Value AS inv_value,
-               c.name AS company_name, c.address1, c.address2, c.address3, c.city, c.state, c.pin,
+               c.name AS company_name, c.address1, c.address2, c.address3, c.city, c.state, c.pin, c.country,
                c.route, c.zone, c.area, c.cluster, c.gstin, c.weekly_off_start,
-               c.weekly_off_end, c.working_hrs_start, c.working_hrs_end, c.security
+               c.weekly_off_end, c.working_hrs_start, c.working_hrs_end,
+               c.security AS security_id, so.security_option AS security
         FROM machines m
         JOIN companies c ON c.id = m.company_id
+        LEFT JOIN status_options st ON st.id = m.status
+        LEFT JOIN security_options so ON so.id = c.security
         WHERE m.id = %s
     """
     contacts_sql = """
@@ -371,14 +414,22 @@ def add_new_entry():
         if not data:
             return jsonify({"error": "No data provided"}), 400
 
+        def to_int_or_none(val):
+            if val is None or val == '':
+                return None
+            try:
+                return int(val)
+            except (ValueError, TypeError):
+                return None
+
         cnx = get_connection(DB_CONFIG)
         cur = cnx.cursor()
 
         # 1. Insert Company
         company_sql = """
-            INSERT INTO companies (name, address1, address2, address3, city, state, pin, route, zone, area, cluster, gstin,
+            INSERT INTO companies (name, address1, address2, address3, city, state, pin, country, route, zone, area, cluster, gstin,
                                    weekly_off_start, weekly_off_end, working_hrs_start, working_hrs_end, security)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         company_values = (
             data.get("company_name", "").strip() or None,
@@ -388,6 +439,7 @@ def add_new_entry():
             data.get("company_city", "").strip() or None,
             data.get("company_state", "").strip() or None,
             data.get("company_pin", "").strip() or None,
+            data.get("company_country", "").strip() or None,
             data.get("company_route", "").strip() or None,
             data.get("company_zone", "").strip() or None,
             data.get("company_area_zarc", "").strip() or None,  # area (ZARC)
@@ -397,7 +449,7 @@ def add_new_entry():
             data.get("company_weekly_off_end", "").strip() or None,
             data.get("company_working_hrs_start") or None,
             data.get("company_working_hrs_end") or None,
-            data.get("company_security", "").strip() or None,
+            to_int_or_none(data.get("company_security")),
         )
         cur.execute(company_sql, company_values)
         company_id = cur.lastrowid
@@ -417,7 +469,7 @@ def add_new_entry():
                     company_id,
                     m.get("mc_no", "").strip() or None,
                     m.get("model", "").strip() or None,
-                    m.get("status", "").strip() or None,
+                    to_int_or_none(m.get("status")),
                     m.get("start_dt") or None,
                     m.get("end_dt") or None,
                     m.get("inv_no", "").strip() or None,

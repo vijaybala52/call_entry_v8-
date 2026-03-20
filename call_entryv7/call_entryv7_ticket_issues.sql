@@ -39,7 +39,7 @@ CREATE TABLE `ticket_issues` (
   KEY `ticket_issue_contact` (`contact_id`),
   CONSTRAINT `ticket_issue_contact` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`id`) ON DELETE CASCADE,
   CONSTRAINT `ticket_issues_fk` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,6 +48,7 @@ CREATE TABLE `ticket_issues` (
 
 LOCK TABLES `ticket_issues` WRITE;
 /*!40000 ALTER TABLE `ticket_issues` DISABLE KEYS */;
+INSERT INTO `ticket_issues` VALUES (113,47,'2026-03-15','14:27','14:28','SD','Mr Ram','they want service','F 1 Service','close',44),(114,47,'2026-03-15','14:33','14:33','SD','Mr.Sridhar','they want calib','T 2 Online','close',29),(115,48,'2026-03-17','11:15','11:22','SD','Mr.Sridhar','they want service','F 1 Service','WF',29),(116,49,'2026-03-17','11:40','11:40','SM','Mr.Mask ','they want Calib','F 2 Calib','open',1),(117,50,'2026-03-17','11:44','11:45','SM','Mr.Sridhar','they want PMV','F 4 PMV','WF',30),(118,49,'2026-03-17','12:08','12:08','VJB','Mr.Vj Bala ','they want  more service','F 1 Service','open',2),(119,51,'2026-03-17','12:14','12:14','VJB','Pavan','They want demo','F 5 Demo','open',47),(120,52,'2026-03-17','12:15','12:15','VJB','Ajay kumar','they want service','F 1 Service','WF',49);
 /*!40000 ALTER TABLE `ticket_issues` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -60,4 +61,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-14 16:32:40
+-- Dump completed on 2026-03-20 13:01:14

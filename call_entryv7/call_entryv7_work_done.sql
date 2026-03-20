@@ -27,11 +27,11 @@ CREATE TABLE `work_done` (
   `work_front_id` int NOT NULL,
   `done_date` date DEFAULT NULL,
   `done_by` varchar(20) DEFAULT NULL,
-  `status` enum('open','closed') DEFAULT 'open',
+  `status` varchar(50) DEFAULT 'open',
   PRIMARY KEY (`id`),
   KEY `work_front_id` (`work_front_id`),
   CONSTRAINT `work_done_ibfk_1` FOREIGN KEY (`work_front_id`) REFERENCES `work_front` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `work_done` (
 
 LOCK TABLES `work_done` WRITE;
 /*!40000 ALTER TABLE `work_done` DISABLE KEYS */;
-INSERT INTO `work_done` VALUES (9,29,'2026-03-12','SD','closed'),(10,32,'2026-03-12','','closed'),(11,31,'2026-03-12','','closed'),(12,30,'2026-03-12','','closed');
+INSERT INTO `work_done` VALUES (22,91,'2026-03-15','','closed'),(23,92,'2026-03-15','','closed');
 /*!40000 ALTER TABLE `work_done` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-13 10:23:48
+-- Dump completed on 2026-03-20 13:01:14

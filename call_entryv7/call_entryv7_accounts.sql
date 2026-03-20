@@ -16,39 +16,35 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `work_front`
+-- Table structure for table `accounts`
 --
 
-DROP TABLE IF EXISTS `work_front`;
+DROP TABLE IF EXISTS `accounts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `work_front` (
+CREATE TABLE `accounts` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `issue_id` int NOT NULL,
-  `short_form_id` int NOT NULL,
-  `cluster_id` int NOT NULL,
-  `status` varchar(50) DEFAULT 'open',
-  `contact_id` int NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `tag_name` varchar(10) NOT NULL,
+  `role_id` int DEFAULT NULL,
+  `email_id` varchar(255) NOT NULL,
+  `phone_no` varchar(255) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `issue_id` (`issue_id`),
-  KEY `short_form_id` (`short_form_id`),
-  KEY `cluster_id` (`cluster_id`),
-  KEY `work_front_contact` (`contact_id`),
-  CONSTRAINT `work_front_contact` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `work_front_ibfk_1` FOREIGN KEY (`issue_id`) REFERENCES `ticket_issues` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `work_front_ibfk_2` FOREIGN KEY (`short_form_id`) REFERENCES `short_form` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `work_front_ibfk_3` FOREIGN KEY (`cluster_id`) REFERENCES `cluster` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `role_id` (`role_id`),
+  CONSTRAINT `accounts_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `work_front`
+-- Dumping data for table `accounts`
 --
 
-LOCK TABLES `work_front` WRITE;
-/*!40000 ALTER TABLE `work_front` DISABLE KEYS */;
-INSERT INTO `work_front` VALUES (91,113,1,75,'done',44),(92,114,8,75,'done',44),(93,115,1,75,'open',44),(94,117,4,76,'open',30),(95,120,1,4,'open',49);
-/*!40000 ALTER TABLE `work_front` ENABLE KEYS */;
+LOCK TABLES `accounts` WRITE;
+/*!40000 ALTER TABLE `accounts` DISABLE KEYS */;
+INSERT INTO `accounts` VALUES (1,'Vijay Bala','VB',1,'vijay@gmail.com','9087743988','Electronic city','scrypt:32768:8:1$wZYlRj0j3XffTbBS$677868c301a6523454e916930410e0461e4731f2cff9148010664c814759fb6237de3923ca3d910f7036a7758caefd49f552849bc9cfed3c7b35d126dfc3c609'),(2,'Vijay ','VJ',1,'vijay1@gmail.com','9987743988','Electronic city','1234567890');
+/*!40000 ALTER TABLE `accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -60,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-20 13:01:14
+-- Dump completed on 2026-03-20 13:01:16

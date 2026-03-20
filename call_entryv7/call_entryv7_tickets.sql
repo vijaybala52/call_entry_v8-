@@ -28,7 +28,7 @@ CREATE TABLE `tickets` (
   `company_id` int NOT NULL,
   `machine_id` int NOT NULL,
   `contact_id` int NOT NULL,
-  `status` enum('open','closed') DEFAULT 'open',
+  `status` varchar(255) DEFAULT 'open',
   PRIMARY KEY (`id`),
   KEY `ticket_contact` (`contact_id`),
   KEY `ticket_machine` (`machine_id`),
@@ -36,7 +36,7 @@ CREATE TABLE `tickets` (
   CONSTRAINT `ticket_company` FOREIGN KEY (`company_id`) REFERENCES `companies` (`id`) ON DELETE CASCADE,
   CONSTRAINT `ticket_contact` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`id`) ON DELETE CASCADE,
   CONSTRAINT `ticket_machine` FOREIGN KEY (`machine_id`) REFERENCES `machines` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +45,7 @@ CREATE TABLE `tickets` (
 
 LOCK TABLES `tickets` WRITE;
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
-INSERT INTO `tickets` VALUES (16,1000,62,54,47,'closed'),(17,1001,4,7,7,'closed'),(18,1002,4,7,7,'closed');
+INSERT INTO `tickets` VALUES (47,1000,26,29,44,'closed'),(48,1001,26,29,44,'open'),(49,1002,1,2,1,'open'),(50,1003,27,30,30,'open'),(51,1004,62,54,47,'open'),(52,1005,64,56,49,'open');
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -58,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-13 10:23:46
+-- Dump completed on 2026-03-20 13:01:14

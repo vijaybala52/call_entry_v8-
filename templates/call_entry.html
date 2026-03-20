@@ -341,7 +341,12 @@
                     </div>
                     <div class="modal-field-row" style="top: 510px;">
                         <label style="width: 130px;">Security Req</label>
-                        <select name="company_security" style="left: 135px; width: 180px;"><option value="">Select</option><option>Direct</option><option>Security Gate</option><option>Work Permit</option><option>Online/Email Permit</option><option>Police Clearance</option></select>
+                        <select name="company_security" style="left: 135px; width: 180px;">
+                            <option value="">Select</option>
+                            {% for opt in security_options %}
+                                <option value="{{ opt.id }}">{{ opt.security_option }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
             </div>
@@ -353,7 +358,15 @@
                             <button type="button" class="btn-remove-entry" onclick="removeMachineEntry(this)">Remove</button>
                             <div class="modal-field-row" style="top: 10px;"><label style="width: 120px;">M/C No.</label><input type="text" name="machine_mc_no[]" style="left: 140px; width: 200px;" /></div>
                             <div class="modal-field-row" style="top: 50px;"><label style="width: 120px;">Model</label><input type="text" name="machine_model[]" style="left: 140px; width: 300px;" /></div>
-                            <div class="modal-field-row" style="top: 90px;"><label style="width: 120px;">Status</label><select name="machine_status[]" style="left: 140px; width: 200px;"><option>Warranty</option><option>AMC</option><option>CM</option></select></div>
+                            <div class="modal-field-row" style="top: 90px;">
+                                <label style="width: 120px;">Status</label>
+                                <select name="machine_status[]" style="left: 140px; width: 200px;">
+                                    <option value="">Select</option>
+                                    {% for opt in status_options %}
+                                        <option value="{{ opt.id }}">{{ opt.status_option }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                             <div class="modal-field-row" style="top: 130px;"><label style="width: 120px;">Start Date</label><input type="date" name="machine_start_dt[]" style="left: 140px; width: 200px;" /><label style="left: 370px;">End Date</label><input type="date" name="machine_end_dt[]" style="left: 470px; width: 200px;" /></div>
                             <div class="modal-field-row" style="top: 170px;"><label style="width: 120px;">Inv No</label><input type="text" name="machine_inv_no[]" style="left: 140px; width: 150px;" /></div>
                             <div class="modal-field-row" style="top: 210px;"><label style="width: 120px;">Inv Date</label><input type="date" name="machine_inv_dt[]" style="left: 140px; width: 200px;" /></div>

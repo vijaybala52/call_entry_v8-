@@ -487,6 +487,7 @@ document.getElementById('addNewEntryForm')?.addEventListener('submit', async fun
         company_state: formData.get('company_state') || '',
         company_pin: formData.get('company_pin') || '',
         company_address3: formData.get('company_address3') || '',
+        company_gstin: formData.get('company_gstin') || '',
         company_country: formData.get('company_country') || '',
         company_zone: formData.get('company_zone') || '',
         company_area_zarc: formData.get('company_area_zarc') || '',
@@ -698,6 +699,7 @@ function fillCompanyFields(company = {}) {
         pin,
         route,
         gstin,
+        country,
         weekly_off_start,
         weekly_off_end,
         working_hrs_start,
@@ -750,7 +752,7 @@ function fillCompanyFields(company = {}) {
     const countrySelect = document.getElementById('countrySelect');
     if (countrySelect) {
         // For input field, set value directly (default to India)
-        countrySelect.value = 'India';
+        countrySelect.value = country || 'India';
     }
     setSelectValue(document.getElementById('weeklyOffStart'), weekly_off_start);
     setSelectValue(document.getElementById('weeklyOffEnd'), weekly_off_end);

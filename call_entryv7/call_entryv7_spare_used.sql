@@ -31,7 +31,7 @@ CREATE TABLE `spare_used` (
   KEY `spare_done` (`work_done_id`),
   CONSTRAINT `spare_done` FOREIGN KEY (`work_done_id`) REFERENCES `work_done` (`id`) ON DELETE CASCADE,
   CONSTRAINT `spare_option` FOREIGN KEY (`spare_option_id`) REFERENCES `spare_option` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,6 @@ CREATE TABLE `spare_used` (
 
 LOCK TABLES `spare_used` WRITE;
 /*!40000 ALTER TABLE `spare_used` DISABLE KEYS */;
-INSERT INTO `spare_used` VALUES (31,9,2),(32,9,3);
 /*!40000 ALTER TABLE `spare_used` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-13 10:23:47
+-- Dump completed on 2026-03-20 13:01:16
