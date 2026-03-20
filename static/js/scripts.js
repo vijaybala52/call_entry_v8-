@@ -1,77 +1,8 @@
 // ============================================
 // Dynamic Scaling (1920x1080 Canvas)
 // ============================================
-let scale = 1;
-
-function calculateScale() {
-    const designWidth = 1920;
-    const designHeight = 1080;
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    const scaleX = viewportWidth / designWidth;
-    const scaleY = viewportHeight / designHeight;
-    
-    // Use smaller scale to fit without scrolling
-    scale = Math.min(scaleX, scaleY);
-    
-    const canvas = document.getElementById('appCanvas');
-    const loginPage = document.getElementById('loginPage');
-    const viewport = document.querySelector('.viewport');
-    
-    // Scale app canvas (for call entry and other pages)
-    if (canvas && viewport) {
-        // Remove any inline styles that might interfere
-        canvas.style.left = '';
-        canvas.style.right = '';
-        canvas.style.top = '';
-        canvas.style.bottom = '';
-        canvas.style.marginLeft = '';
-        canvas.style.marginRight = '';
-        canvas.style.marginTop = '';
-        canvas.style.marginBottom = '';
-        canvas.style.margin = '';
-        
-        // Apply scaling with center origin
-        canvas.style.transform = `scale(${scale})`;
-        canvas.style.transformOrigin = 'center center';
-        
-        // Ensure viewport uses flexbox for centering
-        viewport.style.display = 'flex';
-        viewport.style.alignItems = 'center';
-        viewport.style.justifyContent = 'center';
-        
-        console.log('Canvas scaled to:', scale, 'Viewport:', viewportWidth + 'x' + viewportHeight);
-    }
-    
-    // Scale login page (for login page)
-    if (loginPage && viewport) {
-        // Remove any inline styles that might interfere
-        loginPage.style.left = '';
-        loginPage.style.right = '';
-        loginPage.style.top = '';
-        loginPage.style.bottom = '';
-        loginPage.style.marginLeft = '';
-        loginPage.style.marginRight = '';
-        loginPage.style.marginTop = '';
-        loginPage.style.marginBottom = '';
-        loginPage.style.margin = '';
-        
-        // Apply scaling with center origin
-        loginPage.style.transform = `scale(${scale})`;
-        loginPage.style.transformOrigin = 'center center';
-        
-        // Ensure viewport uses flexbox for centering
-        viewport.style.display = 'flex';
-        viewport.style.alignItems = 'center';
-        viewport.style.justifyContent = 'center';
-        
-        console.log('Login page scaled to:', scale, 'Viewport:', viewportWidth + 'x' + viewportHeight);
-    }
-}
-
-// Initialize on load
-window.addEventListener('load', calculateScale);
-window.addEventListener('resize', calculateScale);
+// Scaling is now handled in CSS using the --app-scale variable
+// which is set early in the document head to avoid flicker.
 
 // ============================================
 // Password Toggle
@@ -2230,6 +2161,8 @@ function startClock() {
 // Limit Dropdown Scroll Size
 // ============================================
 function limitDropdownScrollSize() {
+    if (document.body?.dataset?.page !== 'call-entry') return;
+
     // For select elements - add size attribute to limit visible options
     // This helps control the dropdown height
     const allSelects = document.querySelectorAll('select');
@@ -2291,11 +2224,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Re-apply when new elements are added dynamically
-const observer = new MutationObserver(() => {
-    limitDropdownScrollSize();
-});
+if (document.body?.dataset?.page === 'call-entry') {
+    const observer = new MutationObserver(() => {
+        limitDropdownScrollSize();
+    });
 
-observer.observe(document.body, {
-    childList: true,
-    subtree: true
-});
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+}
