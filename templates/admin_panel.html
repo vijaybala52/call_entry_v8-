@@ -12,7 +12,7 @@
     <div class="admin-card-row">
         <div class="admin-card admin-card-total">
             <div class="admin-card-icon">
-                <span class="admin-card-icon-user"></span>
+                <img src="{{ url_for('static', filename='images/total_user.svg') }}" alt="Total users">
             </div>
             <div class="admin-card-info">
                 <div class="admin-card-number">{{ stats.total_users }}</div>
@@ -22,7 +22,7 @@
 
         <div class="admin-card admin-card-admins">
             <div class="admin-card-icon">
-                <span class="admin-card-icon-shield"></span>
+                <img src="{{ url_for('static', filename='images/admin.png') }}" alt="Admins">
             </div>
             <div class="admin-card-info">
                 <div class="admin-card-number">{{ stats.admin_count }}</div>
@@ -32,7 +32,7 @@
 
         <div class="admin-card admin-card-regular">
             <div class="admin-card-icon">
-                <span class="admin-card-icon-gear"></span>
+                <img src="{{ url_for('static', filename='images/regular_user.png') }}" alt="Regular users">
             </div>
             <div class="admin-card-info">
                 <div class="admin-card-number">{{ stats.regular_count }}</div>
@@ -42,7 +42,7 @@
 
         <div class="admin-card admin-card-active">
             <div class="admin-card-icon">
-                <span class="admin-card-icon-activity"></span>
+                <img src="{{ url_for('static', filename='images/active_today.png') }}" alt="Active today">
             </div>
             <div class="admin-card-info">
                 <div class="admin-card-number">{{ stats.active_today }}</div>

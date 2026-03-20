@@ -38,6 +38,14 @@
   align-items: center;
   justify-content: center;
   margin-right: 22px;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.admin-card-icon img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
 }
 
 .admin-card-icon-user,

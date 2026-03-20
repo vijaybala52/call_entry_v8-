@@ -124,6 +124,8 @@ function handleLogout() {
 // ============================================
 // Register Modal
 // ============================================
+// UNUSED: No element with id "showRegister" exists in current templates.
+// Safe to remove this handler if you don't plan to add a Register trigger button/link.
 document.getElementById('showRegister')?.addEventListener('click', function(e) {
     e.preventDefault();
     document.getElementById('registerModal').classList.add('show');

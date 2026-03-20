@@ -496,6 +496,8 @@ body {
   box-shadow: 0 0 0 #991111;
 }
 
+/* UNUSED: ".register-link" styles are not referenced by any current template.
+   Safe to remove if you do not plan to add a register link on the login page. */
 .register-link {
   text-align: center;
 }
