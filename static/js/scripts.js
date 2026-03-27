@@ -373,22 +373,6 @@ document.querySelectorAll('.modal-overlay').forEach(modal => {
 // ============================================
 document.querySelectorAll('.sidebar-item').forEach(item => {
     item.addEventListener('click', function(e) {
-        // Check if this is the WF Tele link (link to call entry page)
-        const isWfTeleLink = this.classList.contains('sidebar-link') && 
-                            this.href && (this.href.includes('/call-entry') || this.href.endsWith('/'));
-        
-        if (isWfTeleLink) {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            
-            // If not logged in, redirect to login page
-            if (!isLoggedIn) {
-                e.preventDefault();
-                window.location.href = '/login';
-                return;
-            }
-            // If logged in, allow normal navigation (will go directly to call entry)
-        }
-        
         // Remove active from all
         document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
         document.querySelectorAll('.sidebar-btn').forEach(btn => btn.classList.remove('active'));
