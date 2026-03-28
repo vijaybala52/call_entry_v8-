@@ -909,7 +909,7 @@ function renderContactTable(contacts = []) {
         
         // Make contact row selectable with yellow highlight (but not when clicking checkbox)
         tr.addEventListener('click', async (e) => {
-            // Don't trigger row selection if clicking on checkbox
+            // Don't trigger row selection if clicking on checkbox 
             if (e.target.type === 'checkbox') {
                 return;
             }
@@ -1061,52 +1061,160 @@ async function loadMachineDetails(machineId, updateInfoTicket = true, updateTick
 function setupCompanyAutocomplete() {
     const input = document.getElementById('companyInput');
     const datalist = document.getElementById('companyList');
-    if (!input || !datalist) return;
+    if (!input) return;
 
-    const fetchSuggestions = debounce(async (value) => {
-        // Only search if user has typed at least 2 characters
-        if (value.length < 2) {
-            datalist.innerHTML = '';
+    // Hide the native datalist
+    if (datalist) {
+        input.removeAttribute('list');
+        datalist.style.display = 'none';
+    }
+
+    // Create custom dropdown container
+    const dropdown = document.createElement('div');
+    dropdown.id = 'companyDropdownCustom';
+    dropdown.style.position = 'fixed';
+    dropdown.style.background = 'white';
+    dropdown.style.border = '1px solid #ccc';
+    dropdown.style.borderRadius = '4px';
+    dropdown.style.maxHeight = '220px';
+    dropdown.style.overflowY = 'auto';
+    dropdown.style.boxShadow = '0 4px 6px rgba(0,0,0,0.15)';
+    dropdown.style.zIndex = '10000';
+    dropdown.style.display = 'none';
+    dropdown.style.fontFamily = "'Carlito', Arial, sans-serif";
+    dropdown.style.fontSize = '14px';
+    document.body.appendChild(dropdown);
+
+    let suggestions = [];
+    let selectedIndex = -1;
+
+    const positionDropdown = () => {
+        const rect = input.getBoundingClientRect();
+        dropdown.style.left = (rect.left + window.scrollX) + 'px';
+        dropdown.style.top = (rect.bottom + window.scrollY + 5) + 'px';
+        dropdown.style.width = rect.width + 'px';
+    };
+
+    const renderDropdown = () => {
+        dropdown.innerHTML = '';
+        
+        if (!suggestions.length) {
+            dropdown.style.display = 'none';
             return;
         }
-        
+
+        suggestions.forEach((company, idx) => {
+            const item = document.createElement('div');
+            item.style.padding = '8px 12px';
+            item.style.cursor = 'pointer';
+            item.style.borderBottom = '1px solid #f0f0f0';
+            item.style.userSelect = 'none';
+            item.style.backgroundColor = (idx === selectedIndex) ? '#e3f2fd' : 'white';
+            item.textContent = `${company.name}${company.address3 ? ' — ' + company.address3 : ''}`;
+            item.dataset.companyId = company.id;
+            item.className = 'company-dropdown-item';
+
+            item.addEventListener('mouseenter', function() {
+                const allItems = dropdown.querySelectorAll('.company-dropdown-item');
+                allItems.forEach((el, i) => {
+                    el.style.backgroundColor = (i === idx) ? '#e3f2fd' : 'white';
+                });
+            });
+
+            item.addEventListener('mouseleave', function() {
+                const allItems = dropdown.querySelectorAll('.company-dropdown-item');
+                allItems.forEach((el) => {
+                    el.style.backgroundColor = 'white';
+                });
+            });
+
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                console.log('Dropdown item clicked:', company.name, company.id);
+                input.value = company.name;
+                console.log('Loading company details for ID:', company.id);
+                loadCompanyDetails(company.id);
+                dropdown.style.display = 'none';
+                selectedIndex = -1;
+            });
+
+            dropdown.appendChild(item);
+        });
+
+        dropdown.style.display = 'block';
+        positionDropdown();
+    };
+
+    const fetchSuggestions = debounce(async (value) => {
+        if (value.length < 2) {
+            suggestions = [];
+            renderDropdown();
+            return;
+        }
+
         try {
+            console.log('Fetching suggestions for:', value);
             const res = await fetch(`${API_BASE}/api/company-suggest?q=${encodeURIComponent(value)}`);
             const data = await res.json();
-            
-            // Clear existing options
-            datalist.innerHTML = '';
-            
-            // Add companies to datalist
-            (data.companies || []).forEach((c) => {
-                const opt = document.createElement('option');
-                const label = `${c.name}${c.address3 ? ' — ' + c.address3 : ''}`;
-                opt.value = label;
-                opt.setAttribute('data-id', c.id);
-                opt.setAttribute('data-address3', c.address3 || '');
-                datalist.appendChild(opt);
-            });
+            console.log('Received suggestions:', data);
+            suggestions = data.companies || [];
+            console.log('Suggestions set to:', suggestions);
+            selectedIndex = -1;
+            renderDropdown();
         } catch (err) {
-            console.error(err);
+            console.error('Error fetching suggestions:', err);
         }
     }, 250);
 
-    // Search as user types (minimum 2 characters)
     input.addEventListener('input', (e) => {
         fetchSuggestions(e.target.value);
     });
 
-    // Handle selection from datalist
-    input.addEventListener('change', () => {
-        const match = Array.from(datalist.options).find((o) => o.value === input.value);
-        if (!match) return;
-        
-        const id = match.getAttribute('data-id');
-        const address3 = match.getAttribute('data-address3') || '';
-        
-        // Note: address3 is shown in suggestions but address1 goes to streetInput field
-        if (id) {
-            loadCompanyDetails(id);
+    input.addEventListener('keydown', (e) => {
+        if (dropdown.style.display === 'none') return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            selectedIndex = Math.min(selectedIndex + 1, suggestions.length - 1);
+            renderDropdown();
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedIndex = Math.max(selectedIndex - 1, -1);
+            renderDropdown();
+        } else if (e.key === 'Enter' && selectedIndex >= 0 && suggestions[selectedIndex]) {
+            e.preventDefault();
+            const selected = suggestions[selectedIndex];
+            input.value = selected.name;
+            loadCompanyDetails(selected.id);
+            dropdown.style.display = 'none';
+        } else if (e.key === 'Escape') {
+            dropdown.style.display = 'none';
+            selectedIndex = -1;
+        }
+    });
+
+    input.addEventListener('focus', () => {
+        if (suggestions.length > 0) {
+            dropdown.style.display = 'block';
+            positionDropdown();
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
+
+    window.addEventListener('scroll', () => {
+        if (dropdown.style.display === 'block') {
+            positionDropdown();
+        }
+    });
+
+    window.addEventListener('resize', () => {
+        if (dropdown.style.display === 'block') {
+            positionDropdown();
         }
     });
 }
@@ -1463,7 +1571,7 @@ function getUserTag() {
     const tagItem = Array.from(dropdownItems).find(item => item.textContent.trim().startsWith('Tag:'));
     if (tagItem) {
         const tagText = tagItem.textContent.replace('Tag:', '').trim();
-        return tagText || 'SD'; // Default to SD if not found
+        return tagText || 'SD'; // Default to SD if not found sf
     }
     return 'SD'; // Default
 }

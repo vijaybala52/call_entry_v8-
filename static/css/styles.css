@@ -950,6 +950,28 @@ body {
   cursor: text;
 }
 
+.company-autocomplete-dropdown {
+  background: white;
+  border: 1px solid #bdbdbd;
+  border-radius: 4px;
+  max-height: 220px;
+  overflow-y: auto;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  font-family: 'Carlito', Arial, sans-serif;
+  font-size: 14px;
+  z-index: 1000;
+}
+
+.company-autocomplete-item {
+  padding: 8px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #e9e9e9;
+}
+
+.company-autocomplete-item:hover {
+  background: #f7f7f7;
+}
+
 /* Dropdown arrow for Select Company Name */
 .company-name-arrow {
   position: absolute;

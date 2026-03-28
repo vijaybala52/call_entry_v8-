@@ -78,14 +78,14 @@ def company_suggest():
         SELECT id, name, address3
         FROM companies
         WHERE name LIKE %s
-        ORDER BY name
+        ORDER BY CASE WHEN name LIKE %s THEN 0 ELSE 1 END, name
         LIMIT 10
     """
     cnx = cur = None
     try:
         cnx = get_connection(DB_CONFIG)
         cur = cnx.cursor() 
-        cur.execute(sql, (f"%{query}%",))
+        cur.execute(sql, (f"%{query}%", f"{query}%"))
         rows = cur.fetchall()
         companies = []
         for row in rows:
